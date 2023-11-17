@@ -1,4 +1,4 @@
-const { Client, Intents } = require('discord.js');
+const { Client, Intents, Discord} = require('discord.js');
 const client = new Client({ 
   intents: [
     Intents.FLAGS.GUILDS,
@@ -6,7 +6,7 @@ const client = new Client({
     Intents.FLAGS.GUILD_MESSAGES,
   ]
 });
-const prefix = '!'; 
+ const prefix = '!'; 
 
 
 client.on('messageCreate', (message) => {
@@ -61,7 +61,7 @@ client.on('messageCreate', (message) => {
       .then(() => message.channel.send(`${member.user.tag} wurde gemuted.`))
       .catch(console.error);
   }
-
+ 
 });
 client.on('messageCreate', (message) => {
     if (message.author.bot) return;
@@ -144,7 +144,7 @@ client.on('messageCreate', (message) => {
       const warnRole = message.guild.roles.cache.find((role) => role.name === warnRoleName);
   
       if (!warnRole) {
-        
+      
         message.guild.roles.create({
           name: warnRoleName,
           color: 'ORANGE', 
@@ -153,7 +153,7 @@ client.on('messageCreate', (message) => {
           message.channel.send(`${member.user.tag} wurde gewarnt und hat die Rolle ${role.name} erhalten. Grund: ${reason}`);
         }).catch(console.error);
       } else {
-       
+    
         member.roles.add(warnRole);
         message.channel.send(`${member.user.tag} wurde gewarnt und hat die Rolle ${warnRole.name} erhalten. Grund: ${reason}`);
       }
@@ -161,7 +161,7 @@ client.on('messageCreate', (message) => {
   });
 
 client.on('guildMemberAdd', (member) => {
-  const welcomeChannel = member.guild.channels.cache.find((ch) => ch.name === '👋willkommen-tschüss👋'); 
+  const welcomeChannel = member.guild.channels.cache.find((ch) => ch.name === '👋willkommen-tschüss👋'); // 
 
   if (welcomeChannel) {
     welcomeChannel.send(`Willkommen, ${member.user}!`);
@@ -182,7 +182,7 @@ client.once('ready', () => {
   console.log(`Eingeloggt als ${client.user.tag}`);
   client.user.setActivity('Pixel', { type: 'PLAYING' });
 });
-const levels = new Map(); 
+const levels = new Map();
 const levelUpMessages = [
   'Glückwunsch! Du bist jetzt Level 1!',
   'Herzlichen Glückwunsch zum Level 2!',
@@ -195,7 +195,6 @@ client.on('messageCreate', (message) => {
 
   const userId = message.author.id;
 
- 
   if (!levels.has(userId)) {
     levels.set(userId, {
       messages: 0,
@@ -207,17 +206,81 @@ client.on('messageCreate', (message) => {
   userData.messages++;
   levels.set(userId, userData);
 
+ 
   if (userData.messages >= 200) {
     userData.level++;
     userData.messages = 0; 
     levels.set(userId, userData);
 
+ 
     message.channel.send(`Glückwunsch, ${message.author.username}! Du bist jetzt Level ${userData.level}!`);
   }
+
 
   if (!message.content.startsWith(prefix)) return;
   const args = message.content.slice(prefix.length).trim().split(/ +/);
   const command = args.shift().toLowerCase();
+
+ 
+
+
+  if (command === 'userinfo') {
+    const userId = args[0];
+
+    if (!userId) {
+      return message.reply('Bitte gib die Benutzer-ID an.');
+    }
+
+  
+    message.guild.members.fetch(userId).then(targetUser => {
+      const userEmbed = {
+        color: '#0099ff',
+        title: 'Benutzerinformationen',
+        thumbnail: { url: targetUser.user.displayAvatarURL() },
+        fields: [
+          { name: 'Benutzername', value: targetUser.user.username, inline: true },
+          { name: 'ID', value: targetUser.user.id },
+          { name: 'Beigetreten am', value: targetUser.joinedAt.toLocaleDateString(), inline: true },
+          { name: 'Account erstellt am', value: targetUser.user.createdAt.toLocaleDateString(), inline: true },
+        ],
+      };
+
+      message.channel.send({ embeds: [userEmbed] });
+    }).catch(error => {
+      console.error(error);
+      message.reply('Der Benutzer wurde nicht gefunden.');
+    });
+  }
+
+
 });
+
+client.on('messageCreate', async (message) => {
+
+
+  const args = message.content.slice(prefix.length).trim().split(/ +/);
+  const command = args.shift().toLowerCase();
+
+  if (command === 'clear') {
+
+    if (!message.member.permissions.has('MANAGE_MESSAGES')) {
+      return message.reply('Du hast nicht die Berechtigung, Nachrichten zu löschen.');
+    }
+
+
+    const deleteCount = parseInt(args[0], 10);
+
+ 
+    if (!deleteCount || deleteCount < 2 || deleteCount > 100) {
+      return message.reply('Bitte gib eine Zahl zwischen 2 und 100 an, um Nachrichten zu löschen.');
+    }
+
+  
+    const fetched = await message.channel.messages.fetch({ limit: deleteCount });
+    message.channel.bulkDelete(fetched)
+      .catch(error => message.reply(`Beim Löschen von Nachrichten ist ein Fehler aufgetreten: ${error}`));
+  }
+});
+
 const token = '';
 client.login(token);
