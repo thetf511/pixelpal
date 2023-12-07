@@ -1,0 +1,43 @@
+{
+  "welcome_channels": {
+    "GUILD_ID_1": [
+      "welcome-channel-1",
+      "welcome-channel-2"
+    ],
+    "GUILD_ID_2": [
+      "welcome-channel-3",
+      "welcome-channel-4"
+    ],
+    "GUILD_ID_3": [
+      "welcome-channel-5"
+    ],
+    "": [
+      ""
+    ],
+    "": [
+      ""
+    ],
+    "1157415430521098411": [
+      "test"
+    ]
+  },
+  "goodbye_channels": {
+    "GUILD_ID_1": [
+      "goodbye-channel-1",
+      "goodbye-channel-2"
+    ],
+    "GUILD_ID_2": [
+      "goodbye-channel-3",
+      "goodbye-channel-4"
+    ],
+    "": [
+      ""
+    ],
+    "": [
+      ""
+    ],
+    "": [
+      ""
+    ]
+  }
+}
