@@ -54,6 +54,7 @@ Dies ist ein Discord-Bot, der verschiedene Moderationsbefehle und Leveling-Funkt
 - Befehl: `!clear [Anzahl]`
 - Berechtigung: `MANAGE_MESSAGES`
 - Löscht eine bestimmte Anzahl von Nachrichten im aktuellen Channel.
+- Es kann etwas dauern aufgrund der API
 
 ## Konfiguration
 
