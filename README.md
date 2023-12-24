@@ -5,7 +5,6 @@ Dies ist ein Discord-Bot, der verschiedene Moderationsbefehle und Leveling-Funkt
 ## Moderationsbefehle
 
 ### 1. Kick
-
 - Befehl: `!kick @Benutzer`
 - Berechtigung: `KICK_MEMBERS`
 - Kickt den erwähnten Benutzer aus dem Server.
